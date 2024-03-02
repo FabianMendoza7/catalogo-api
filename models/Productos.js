@@ -11,9 +11,6 @@ const productosSchema = new Schema({
     },    
     precio: {
         type: Number
-    },
-    imagen : {
-        type: String
     }
 });
 

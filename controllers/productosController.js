@@ -1,46 +1,9 @@
-import multer from 'multer';
-import { nanoid } from 'nanoid';
 import Productos from '../models/Productos.js';
-
-// Configuración de multer.
-const configuracionMulter = {
-    storage: multer.diskStorage({
-        destination: (req, file, cb) => {
-            cb(null, __dirname + '../../uploads/');
-        },
-        filename: (req, file, cb) => {
-            const extension = file.mimetype.split('/')[1];
-            cb(null, `${nanoid()}.${extension}`);
-        }
-    }),
-    fileFilter: (req, file, cb) => {
-        if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
-            cb(null, true);
-        } else {
-            cb(new Error('Formato No válido'));
-        }
-    },
-};
-
-// Middleware de carga de archivos.
-const upload = multer(configuracionMulter).single('imagen');
-
-export const subirArchivo = (req, res, next) => {
-    upload(req, res, (error) => {
-        if(error) {
-            res.json({mensaje: error});
-        }
-        return next();
-    });
-}
 
 export const crearProducto = async (req, res, next) => {
     const producto = new Productos(req.body);
 
     try {
-        // if(req.file.filename) {
-        //     producto.imagen = req.file.filename;
-        // }
         await producto.save();
         res.json({mensaje : 'Se agregó un nuevo producto'})
 
@@ -55,6 +18,7 @@ export const mostrarProductos = async (req, res, next) => {
         // Obtener todos los productos.
         const productos = await Productos.find({});
         res.json(productos);
+        
     } catch (error) {
         console.log(error);
         next();
@@ -79,15 +43,6 @@ export const actualizarProducto = async (req, res, next) => {
     try {
         // Construir un nuevo producto.
         let nuevoProducto = req.body;
-
-        // // Verificar si hay imagen nueva.
-        // if(req.file) {
-        //     nuevoProducto.imagen = req.file.filename;
-        // } else {
-        //     let productoAnterior = await Productos.findById(req.params.idProducto);
-        //     nuevoProducto.imagen = productoAnterior.imagen;
-        // }
-        
         let producto = await Productos.findOneAndUpdate({_id : req.params.idProducto}, nuevoProducto, {
             new : true,
         });

@@ -1,5 +1,5 @@
 import express from 'express';
-import { subirArchivo, crearProducto, mostrarProductos, mostrarProducto, 
+import { crearProducto, mostrarProductos, mostrarProducto, 
          actualizarProducto, eliminarProducto, buscarProducto } from '../controllers/productosController.js';
 //import usuariosController from '../controllers/usuariosController.js';
 // Middleware para proteger las rutas.
@@ -13,7 +13,6 @@ export default () => {
 
     // Nuevos productos
     router.post('/productos', 
-        // subirArchivo,
         crearProducto
     );
 
@@ -29,7 +28,6 @@ export default () => {
 
     // Actualizar un producto en especifico por su ID.
     router.put('/productos/:idProducto', 
-        //subirArchivo,
         actualizarProducto
     );
 

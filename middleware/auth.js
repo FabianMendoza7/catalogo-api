@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-export default (req, res, next) => {
-
+export default (req, _res, next) => {
     // Autorización por el header.
     const authHeader = req.get('Authorization');
 
@@ -16,6 +15,7 @@ export default (req, res, next) => {
     // Obtener el token y verificarlo.
     const token = authHeader.split(' ')[1];
     let revisarToken;
+    
     try {
         revisarToken = jwt.verify(token, 'LLAVESECRETA');
     } catch (error) {

@@ -1,9 +1,10 @@
 import express from 'express';
 import { crearProducto, mostrarProductos, mostrarProducto, 
          actualizarProducto, eliminarProducto, buscarProducto } from '../controllers/productosController.js';
-//import usuariosController from '../controllers/usuariosController.js';
+import { registrarUsuario, autenticarUsuario } from '../controllers/usuariosController.js';
+
 // Middleware para proteger las rutas.
-//import auth from '../middleware/auth.js';
+import auth from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -41,15 +42,16 @@ export default () => {
         buscarProducto
     );
 
-    // // Usuarios.
-    // router.post('/crear-cuenta', 
-    //     auth,
-    //     usuariosController.registrarUsuario
-    // );
+    /** USUARIOS */
 
-    // router.post('/iniciar-sesion',
-    //     usuariosController.autenticarUsuario
-    // );    
+    router.post('/crear-cuenta', 
+        //auth,
+        registrarUsuario
+    );
+
+    router.post('/iniciar-sesion',
+        autenticarUsuario
+    );    
 
     return router;
 }

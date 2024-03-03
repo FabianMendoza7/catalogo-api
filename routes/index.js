@@ -45,7 +45,7 @@ export default () => {
     /** USUARIOS */
 
     router.post('/crear-cuenta', 
-        //auth,
+        auth,
         registrarUsuario
     );
 

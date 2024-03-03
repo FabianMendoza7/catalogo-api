@@ -41,7 +41,7 @@ export const autenticarUsuario = async (req, res, next) => {
                 nombre: usuario.nombre, 
                 id : usuario._id
             }, 
-            'LLAVESECRETA', 
+            process.env.JWT_KEY,
             {
                 expiresIn : '1h'
             }); 

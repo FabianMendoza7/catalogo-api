@@ -1,15 +1,17 @@
 import Productos from '../models/Productos.js';
+import { ResourceNotFoundError } from '../utils/errorsType.js';
 
 export const crearProducto = async (req, res, next) => {
     const producto = new Productos(req.body);
 
     try {
         await producto.save();
-        res.json({mensaje : 'Se agregó un nuevo producto'})
+
+        res.status(201).json({mensaje : 'Se agregó un nuevo producto'})
 
     } catch (error) {
-        console.log(error);
-        next();
+        console.error(error);
+        next(error, req, res, next);
     }
 } 
 
@@ -17,53 +19,78 @@ export const mostrarProductos = async (req, res, next) => {
     try {
         // Obtener todos los productos.
         const productos = await Productos.find({});
-        res.json(productos);
+
+        if(!productos || productos.length == 0) {
+            throw new ResourceNotFoundError(`No hay productos en el catálogo`);
+        }
+
+        // Mostrar los productos.
+        res.status(200).json(productos);
         
     } catch (error) {
-        console.log(error);
-        next();
+        console.error(error);
+        next(error, req, res, next);
     }
 }
 
 // Muestra un producto en específico por su ID.
 export const mostrarProducto = async (req, res, next) => {
-    const producto = await Productos.findById(req.params.idProducto);
+    const idProducto = req.params.idProducto;
 
-    if(!producto) {
-        res.json({mensaje : 'Ese producto no existe'});
-        return next();
+    try {
+        const producto = await Productos.findById(idProducto);
+
+        if(!producto) {
+            throw new ResourceNotFoundError(`El producto ${idProducto} no existe`);
+        }
+
+        // Mostrar el producto.
+        res.status(200).json(producto);
+
+    } catch (error) {
+        console.error(error);
+        next(error, req, res, next);
     }
-
-    // Mostrar el producto.
-    res.json(producto);
 }
 
 // Actualiza un producto por su id.
 export const actualizarProducto = async (req, res, next) => {
+    const idProducto = req.params.idProducto;
+
     try {
-        // Construir un nuevo producto.
-        let nuevoProducto = req.body;
-        let producto = await Productos.findOneAndUpdate({_id : req.params.idProducto}, nuevoProducto, {
+        let nuevosDatos = req.body;
+        let producto = await Productos.findOneAndUpdate({_id : idProducto}, nuevosDatos, {
             new : true,
         });
 
-        res.json(producto);
+        if(!producto) {
+            throw new ResourceNotFoundError(`El producto ${idProducto} no existe`);
+        }        
+
+        res.status(200).json(producto);
 
     } catch (error) {
-        console.log(error);
-        next();
+        console.error(error);
+        next(error, req, res, next);
     }
 }
 
 // Elimina un producto via ID
 export const eliminarProducto = async (req, res, next) => {
+    const idProducto = req.params.idProducto;
+
     try {
-        await Productos.findByIdAndDelete({ _id : req.params.idProducto });
-        res.json({mensaje : 'El producto se ha eliminado'});
+        let producto = await Productos.findByIdAndDelete({ _id : idProducto });
+
+        if(!producto) {
+            throw new ResourceNotFoundError(`El producto ${idProducto} no existe`);
+        }        
+
+        res.status(200).json({mensaje : `El producto ${idProducto} se ha eliminado`});
 
     } catch (error) {
-        console.log(error);
-        next();
+        console.error(error);
+        next(error, req, res, next);
     }
 }
 
@@ -72,10 +99,11 @@ export const buscarProducto = async (req, res, next) => {
         // Obtener el query.
         const { query } = req.params;
         const producto = await Productos.find({ nombre: new RegExp(query, 'i') });
-        res.json(producto);
+
+        res.status(200).json(producto);
 
     } catch (error) {
-        console.log(error);
-        next();
+        console.error(error);
+        next(error, req, res, next);
     }
 }

@@ -17,7 +17,8 @@ export default (req, _res, next) => {
     let revisarToken;
     
     try {
-        revisarToken = jwt.verify(token, 'LLAVESECRETA');
+        revisarToken = jwt.verify(token, process.env.JWT_KEY);
+        
     } catch (error) {
         error.statusCode = 500;
         throw error;

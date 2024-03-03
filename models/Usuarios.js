@@ -6,6 +6,7 @@ const usuariosSchema = new Schema({
         unique: true,
         lowercase: true,
         trim : true, 
+        required: true
     },
     nombre : {
         type: String, 

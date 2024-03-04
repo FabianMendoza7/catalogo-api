@@ -5,9 +5,7 @@ export default (req, res, next) => {
     // Autorización por el header.
     const authHeader = req.get('Authorization');
 
-    console.log(authHeader);
-
-    if(!authHeader) {
+    if(!authHeader || authHeader == 'Bearer') {
         throw new UnauthorizedError('No autenticado, no hay JWT');
     }
 
@@ -19,7 +17,7 @@ export default (req, res, next) => {
         revisarToken = jwt.verify(token, process.env.JWT_KEY);
         
     } catch (error) {
-        return next(error, req, res, next);
+        return next(error, null, res, null);
     }
 
     // Si es un token válido, pero hay algún error.
@@ -27,5 +25,5 @@ export default (req, res, next) => {
         throw new UnauthorizedError('No autenticado');
     }
 
-    next();
+    return next();
 }

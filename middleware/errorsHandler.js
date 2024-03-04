@@ -2,8 +2,8 @@ import { ResourceNotFoundError, UnauthorizedError } from '../utils/errorsTypes.j
 
 export default (error, _req, res, _next) => {
     if(error.name === 'ValidationError') {
-        const errores = Object.values(error.errors).map((e) => e.message);
-        return res.status(422).json({ mensaje: 'Datos de entrada no válidos', errores });
+        const detalle = Object.values(error.errors).map((e) => e.message);
+        return res.status(422).json({ mensaje: 'Datos de entrada no válidos', detalle });
     }
 
     if(error.name === 'MongoServerError' && error.code === 11000) {
@@ -20,5 +20,5 @@ export default (error, _req, res, _next) => {
         return res.status(404).json({ mensaje: error.message });
     }
 
-    return res.status(500).json({ mensaje: 'Hubo un error inesperado', error });
+    return res.status(500).json({ mensaje: 'Hubo un error inesperado', detalle: [error] });
 }

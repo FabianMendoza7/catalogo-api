@@ -11,7 +11,7 @@ export const registrarUsuario = async (req, res, next) => {
         usuario.password = await bcrypt.hash(req.body.password, 12);
         await usuario.save();
 
-        res.status(201).json({mensaje : 'Usuario Creado Correctamente'});
+        res.status(201).json({mensaje : 'Usuario creado correctamente'});
 
     } catch (error) {
         console.error(error);

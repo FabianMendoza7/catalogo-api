@@ -49,7 +49,7 @@ if (process.env.NODE_ENV === 'production') {
     app.use(cors());
 }
 
-// Incorporar rutas y middlewares de la app.
+// Incorporar rutas y middlewares.
 app.use('/', usuariosRoutes());
 app.use(authHandler);
 app.use('/', productosRoutes());

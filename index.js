@@ -3,7 +3,13 @@ import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import * as dotenv from 'dotenv';
-import routes from './routes/index.js';
+import productosRoutes from './routes/productosRoutes.js';
+import usuariosRoutes from './routes/usuariosRoutes.js';
+
+// Middleware para proteger las rutas.
+import authHandler from './middleware/authHandler.js';
+
+// Middleware para manejo de errores de negocio.
 import errorsHandler from './middleware/errorsHandler.js';
 
 // Obtener variables de entorno.
@@ -43,11 +49,13 @@ if (process.env.NODE_ENV === 'production') {
     app.use(cors());
 }
 
-// Rutas de la app.
-app.use('/', routes());
-
-// Middleware para manejo de errores.
+// Incorporar rutas y middlewares de la app.
+app.use('/', usuariosRoutes());
+app.use(authHandler);
+app.use('/', productosRoutes());
 app.use(errorsHandler);
 
 // Escuchar por el puerto.
-app.listen(5000);
+app.listen(process.env.PORT, () => {
+    console.log(`El servidor está corriendo por el puerto ${process.env.PORT}`);
+});

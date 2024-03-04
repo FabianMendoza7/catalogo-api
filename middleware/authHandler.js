@@ -1,15 +1,14 @@
 import jwt from 'jsonwebtoken';
+import { UnauthorizedError } from '../utils/errorsTypes.js';
 
-export default (req, _res, next) => {
+export default (req, res, next) => {
     // Autorización por el header.
     const authHeader = req.get('Authorization');
 
     console.log(authHeader);
 
     if(!authHeader) {
-        const error = new Error('No autenticado, no hay JWT');
-        error.statusCode = 401;
-        throw error;
+        throw new UnauthorizedError('No autenticado, no hay JWT');
     }
 
     // Obtener el token y verificarlo.
@@ -20,15 +19,12 @@ export default (req, _res, next) => {
         revisarToken = jwt.verify(token, process.env.JWT_KEY);
         
     } catch (error) {
-        error.statusCode = 500;
-        throw error;
+        return next(error, req, res, next);
     }
 
     // Si es un token válido, pero hay algún error.
     if(!revisarToken) {
-        const error = new Error('No autenticado');
-        error.statusCode = 401;
-        throw error;
+        throw new UnauthorizedError('No autenticado');
     }
 
     next();

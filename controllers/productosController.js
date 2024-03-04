@@ -1,5 +1,5 @@
 import Productos from '../models/Productos.js';
-import { ResourceNotFoundError } from '../utils/errorsType.js';
+import { ResourceNotFoundError } from '../utils/errorsTypes.js';
 
 export const crearProducto = async (req, res, next) => {
     const producto = new Productos(req.body);

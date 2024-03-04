@@ -3,18 +3,18 @@ import { Schema, model } from 'mongoose';
 const usuariosSchema = new Schema({
     email: {
         type: String, 
-        unique: true,
         lowercase: true,
         trim : true, 
-        required: true
+        unique: true,
+        required: [true, 'Email es requerido']
     },
     nombre : {
         type: String, 
-        required: 'Agrega tu Nombre'
+        required: [true, 'Nombre es requerido']
     }, 
     password: {
         type: String, 
-        required: true
+        required: [true, 'Password es requerido']
     }
 });
 

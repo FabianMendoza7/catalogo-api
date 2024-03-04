@@ -4,12 +4,16 @@ const productosSchema = new Schema({
     nombre : {
         type: String,
         trim: true,
-        required: [true, 'Nombre es requerido']
+        required: [true, 'Nombre es requerido'],
+        minlength: [3, 'Nombre debe tener al menos 3 caracteres'],
+        maxlength: [50, 'Nombre debe tener máximo 50 caracteres']          
     },
     descripcion : {
         type: String,
         trim: true,
-        required: [true, 'Descripción es requerida']
+        required: [true, 'Descripción es requerida'],
+        minlength: [5, 'Descripción debe tener al menos 5 caracteres'],
+        maxlength: [250, 'Descripción debe tener máximo 250 caracteres']          
     },    
     precio: {
         type: Number,

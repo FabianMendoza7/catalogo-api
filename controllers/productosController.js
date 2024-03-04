@@ -20,10 +20,6 @@ export const mostrarProductos = async (req, res, next) => {
         // Obtener todos los productos.
         const productos = await Productos.find({});
 
-        if(!productos || productos.length == 0) {
-            throw new ResourceNotFoundError(`No hay productos en el catálogo`);
-        }
-
         // Mostrar los productos.
         res.status(200).json(productos);
         

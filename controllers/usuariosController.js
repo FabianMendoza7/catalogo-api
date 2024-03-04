@@ -1,14 +1,21 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import Usuarios from '../models/Usuarios.js';
-import { UnauthorizedError } from '../utils/errorsTypes.js';
+import { UnauthorizedError, BadRequestError } from '../utils/errorsTypes.js';
 
 export const registrarUsuario = async (req, res, next) => {
     // Leer los datos del usuario y colocarlos en el modelo.
-    const usuario = new Usuarios(req.body);
+    const { password, confirmar } = req.body;
 
     try {
+        if(password !== confirmar) {
+            throw new BadRequestError(`Contraseña mal confirmada`);
+        }
+
+        const usuario = new Usuarios(req.body);
+
         usuario.password = await bcrypt.hash(req.body.password, 12);
+        
         await usuario.save();
 
         res.status(201).json({mensaje : 'Usuario creado correctamente'});
